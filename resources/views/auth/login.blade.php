@@ -3,6 +3,11 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
+            @if (session('current_company_id'))
+    <div class="mb-4 text-sm text-gray-600">
+        Estás registrando un usuario para la empresa ID: {{ session('current_company_id') }}
+    </div>
+    @endif
         @csrf
 
         <!-- Email Address -->
