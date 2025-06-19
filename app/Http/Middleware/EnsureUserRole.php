@@ -7,24 +7,16 @@ use Illuminate\Support\Facades\Auth;
 
 class EnsureUserRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string  $role
-     * @return mixed
-     */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
         if (!Auth::check()) {
             return redirect('login');
         }
 
-        $userRole = Auth::user()->role ? Auth::user()->role->slug : 'usuario';
+        $userRole = Auth::user()->role ? Auth::user()->role->slug : null;
 
-        if ($userRole !== $role) {
-            return redirect('/dashboard')->with('error', 'Acceso denegado');
+        if (!in_array($userRole, $roles)) {
+            return redirect('/dashboard')->with('error', 'Acceso denegado.');
         }
 
         return $next($request);
