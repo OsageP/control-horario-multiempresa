@@ -1,44 +1,55 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Aquí están todas las rutas públicas y protegidas del sistema.
 |
 */
 
-// Rutas para registro de usuario
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store']);
-
-// Rutas para registro de empresa
-Route::get('/register/company', [CompanyController::class, 'create'])->name('company.create');
-Route::post('/register/company', [CompanyController::class, 'store'])->name('company.store');
-
-// Rutas por defecto de Laravel Breeze (login, dashboard...)
-require __DIR__.'/auth.php';
-
+// Rutas públicas
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/register/company', [CompanyController::class, 'create'])->name('company.create');
+Route::post('/register/company', [CompanyController::class, 'store'])->name('company.store');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
 
+// Rutas de autenticación (Laravel Breeze)
 require __DIR__.'/auth.php';
+
+// Rutas protegidas por login
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Perfil de usuario
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    // Rutas por roles
+    Route::middleware('role:superadmin')->group(function () {
+        Route::get('/superadmin', fn() => view('dashboard.superadmin'))->name('dashboard.superadmin');
+    });
+
+    Route::middleware('role:admin_empresa')->group(function () {
+        Route::get('/admin_empresa', fn() => view('dashboard.admin_empresa'))->name('dashboard.admin_empresa');
+    });
+
+    Route::middleware('role:usuario')->group(function () {
+        Route::get('/mi-perfil', fn() => view('dashboard.usuario'))->name('dashboard.usuario');
+    });
+});
