@@ -13,8 +13,10 @@ return new class extends Migration
 {
     Schema::create('roles', function (Blueprint $table) {
         $table->id();
-        $table->string('name')->unique(); // 'superadmin', 'admin_empresa', 'encargado', 'usuario'
-        $table->string('slug')->unique(); // identificador técnico
+        $table->string('name');
+        $table->string('slug')->unique(); // ej: 'superadmin'
+        $table->string('description')->nullable();
+        $table->unsignedTinyInteger('level')->default(1); // nivel jerárquico
         $table->timestamps();
     });
 }
