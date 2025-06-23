@@ -42,8 +42,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Rutas por roles
-   Route::middleware(['auth', 'check-role:superadmin'])->group(function () {
-    Route::get('/superadmin', [DashboardController::class, 'superadmin']);
+   Route::middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::get('/superadmin', fn() => view('dashboard.superadmin'))->name('dashboard.superadmin');
 });
 
     Route::middleware('role:admin_empresa')->group(function () {
