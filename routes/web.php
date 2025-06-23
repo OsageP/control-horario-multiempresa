@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SuperAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +42,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Rutas por roles
-    Route::middleware('role:superadmin')->group(function () {
-        Route::get('/superadmin', fn() => view('dashboard.superadmin'))->name('dashboard.superadmin');
-    });
+   Route::middleware('role:superadmin')->group(function () {
+    Route::get('/superadmin', [SuperAdminController::class, 'index'])->name('dashboard.superadmin');
+});
 
     Route::middleware('role:admin_empresa')->group(function () {
         Route::get('/admin_empresa', fn() => view('dashboard.admin_empresa'))->name('dashboard.admin_empresa');

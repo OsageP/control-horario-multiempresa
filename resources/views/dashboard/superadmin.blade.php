@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Superadmin')
+@section('title', 'Superadmin Dashboard')
 
 @section('content')
 <div class="container">
@@ -16,14 +16,14 @@
                     <p>Desde aquí puedes gestionar todas las empresas registradas en la plataforma.</p>
 
                     <div class="mb-4">
-                        <a href="{{ route('empresas.index') }}" class="btn btn-success">
-                            Gestionar Empresas
+                        <a href="{{ route('empresas.index') }}" class="btn btn-success disabled">
+                            Gestionar Empresas (pendiente)
                         </a>
-                        <a href="#" class="btn btn-info ms-2">
-                            Configuración Global
+                        <a href="#" class="btn btn-info ms-2 disabled">
+                            Configuración Global (pendiente)
                         </a>
-                        <a href="#" class="btn btn-warning ms-2">
-                            Auditoría General
+                        <a href="#" class="btn btn-warning ms-2 disabled">
+                            Auditoría General (pendiente)
                         </a>
                     </div>
 
