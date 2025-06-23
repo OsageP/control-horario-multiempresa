@@ -13,7 +13,10 @@ class EnsureUserRole
             return redirect('login');
         }
 
-        $userRole = Auth::user()->role ? Auth::user()->role->slug : null;
+        $user = Auth::user();
+
+        // Asegúrate de tener acceso al rol y su slug
+        $userRole = $user->role ? $user->role->slug : null;
 
         if (!in_array($userRole, $roles)) {
             return redirect('/dashboard')->with('error', 'Acceso denegado.');
