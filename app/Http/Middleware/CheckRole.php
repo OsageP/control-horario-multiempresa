@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class EnsureUserRole
+class CheckRole
 {
     public function handle($request, $next, ...$roles)
     {
