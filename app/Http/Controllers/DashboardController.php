@@ -8,6 +8,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $role = auth()->user()->role ? auth()->user()->role->slug : null;
+
+        return match($role) {
+            'superadmin' => redirect()->route('dashboard.superadmin'),
+            'admin_empresa' => redirect()->route('dashboard.admin_empresa'),
+            default => redirect()->route('dashboard.usuario'),
+        };
     }
 }

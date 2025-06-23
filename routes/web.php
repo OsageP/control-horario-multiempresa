@@ -5,7 +5,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SuperAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,21 +34,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Perfil de usuario
-    Route::group(['prefix' => 'profile'], function () {
+    Route::prefix('profile')->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
-    // Rutas por roles
-   Route::middleware(['auth', 'role:superadmin'])->group(function () {
-    Route::get('/superadmin', fn() => view('dashboard.superadmin'))->name('dashboard.superadmin');
-});
+    // Rutas solo para Superadmin
+    Route::middleware('role:superadmin')->group(function () {
+        Route::get('/superadmin', fn() => view('dashboard.superadmin'))->name('dashboard.superadmin');
+    });
 
+    // Rutas solo para Admin de Empresa
     Route::middleware('role:admin_empresa')->group(function () {
         Route::get('/admin_empresa', fn() => view('dashboard.admin_empresa'))->name('dashboard.admin_empresa');
     });
 
+    // Rutas para usuarios normales
     Route::middleware('role:usuario')->group(function () {
         Route::get('/mi-perfil', fn() => view('dashboard.usuario'))->name('dashboard.usuario');
     });
